@@ -1,13 +1,13 @@
-name: "Terraform"
+name: "Terraform" #defines the name of the Actions workflow
 
-on:
+on: #states that this workflow should only run when something is pushed to the main branch or on a pull request
   push:
     branches:
       - main
   pull_request:
 
 jobs:
-  terraform:
+  terraform: #defines the terraform job with 8 steps
     name: "Terraform"
     runs-on: ubuntu-latest
     permissions:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
+      - name: Setup Terraform #enables terraform CLI to connect to terraform cloud
         uses: hashicorp/setup-terraform@v1
         with:
           # terraform_version: 0.13.0:
