@@ -22,25 +22,25 @@ jobs:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Format
+      - name: Terraform Format #checks if the configuration is properly formatted
         id: fmt
         run: terraform fmt -check
 
-      - name: Terraform Init
+      - name: Terraform Init #initialized terraform configuration using GH Action workflow
         id: init
         run: terraform init
       
-      - name: Terraform Validate
+      - name: Terraform Validate #validates the configuration
         id: validate
         run: terraform validate -no-color
 
-      - name: Terraform Plan
+      - name: Terraform Plan #triggers a remote plan on terraform cloud that will run in terraform cloud upon a pull request
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
-      - name: Update Pull Request
+      - name: Update Pull Request #updates pull request with results of the format, init, and plan steps. Displays plan output
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
@@ -70,7 +70,7 @@ jobs:
               body: output
             })
 
-      - name: Terraform Plan Status
+      - name: Terraform Plan Status #exits plan stage if outcome is a failure
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
